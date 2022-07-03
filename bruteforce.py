@@ -33,7 +33,7 @@ class StockPortfolio:
                f"{self.get_global_income():.2f} euros au bout de 2 ans, " \
                f"pour {self.get_global_invest()} euros investis. \n" \
                f"Soit un taux global de " \
-               f"{self.get_global_income()*100/500:.2f}.\n"\
+               f"{self.get_global_income()*100/500:.2f}%.\n"\
                f"Il nécessite : {self.portfolio}"
 
 
