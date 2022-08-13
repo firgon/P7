@@ -1,10 +1,6 @@
 import time
 from dataclasses import dataclass
 import numpy as np
-import tkinter as tk
-from tkinter import filedialog
-import csv
-
 
 @dataclass
 class Stock:
@@ -32,7 +28,7 @@ class StockPortfolio:
     def __repr__(self):
         return f"Le portefeuille recommandé rapportera " \
                f"{self.income:.2f} euros au bout de 2 ans, " \
-               f"pour {self.get_global_invest()} euros investis. \n" \
+               f"pour {self.get_global_invest():.2f} euros investis. \n" \
                f"Soit un taux global de " \
                f"{self.income*100/500:.2f}%.\n"\
                f"Il nécessite : {self.portfolio}"
@@ -70,35 +66,10 @@ def timeit(func):
         result = func(*args, **kw)
         end = time.perf_counter()
 
-        print(f"{func.__name__} a pris : "
-              f"{(end-start)*1000:.2f} millisecondes.")
+        print(f"*** {func.__name__} a pris : "
+              f"{(end-start):.4f} secondes. ***")
         return result
     return timed
-
-
-def take_as_much_as_you_can(sorted_stocks: list, money: int) -> list:
-    """function to take one of each stock in list
-    until there is not enough money"""
-    stock_list = []
-    for stock in sorted_stocks:
-        if money > stock.value:
-            money -= stock.value
-            stock_list.append(stock)
-
-    return stock_list
-
-
-@timeit
-def simplest_solution(available_stocks: list) -> StockPortfolio:
-    """simplest solution : take all best rated stock until there is no money
-    function only used to have a approximation of result"""
-    sorted_list = sorted(available_stocks,
-                         key=lambda x: x.income/x.value,
-                         reverse=True)
-
-    stock_list = take_as_much_as_you_can(sorted_list, MAX_MONEY)
-
-    return StockPortfolio(stock_list, calculate_income(stock_list))
 
 
 def calculate_income(stocks_list) -> float:
@@ -139,36 +110,8 @@ def bruteforce(available_stocks: tuple,
                           calculate_income(building_portfolio))
 
 
-def read_values_csv() -> list:
-    result = []
-
-    root = tk.Tk()
-    root.withdraw()
-
-    choice = filedialog.askopenfilename()
-
-    with open(choice, "r") as file:
-        reader = csv.DictReader(file)
-
-        for line in reader:
-            price = float(line['price'])
-            if price <= 0:
-                continue
-            result.append(Stock(line['name'],
-                                price,
-                                price * float(line['profit'])/100))
-
-    return result
-
-
-def fin():
-    print("La solution avec les actions les plus rentables est : ")
-    print(simplest_solution(stocks))
-    print()
-    print("Pour nous la meilleure solution est :")
-    print(bruteforce(stocks, MAX_MONEY))
-    exit(0)
-
-
-stocks = read_values_csv()
-fin()
+print()
+print(f"Recherche sur {len(stocks)} actions :")
+print()
+print("La solution de force brute vous propose :")
+print(bruteforce(stocks, MAX_MONEY))
