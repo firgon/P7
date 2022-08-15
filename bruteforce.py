@@ -2,6 +2,7 @@ import time
 from dataclasses import dataclass
 import numpy as np
 
+
 @dataclass
 class Stock:
     """Class to store data on a stock"""
